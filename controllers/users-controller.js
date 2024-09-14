@@ -179,20 +179,18 @@ exports.updateUserData = async (req, res) => {
 
 
 exports.deleteUser = async (req,res)=>{
-    const { id } = req.params;
-    const user = UserModelExport.deleteOne({ _id:id});
+  const { id } = req.params;
+  const user = await UserModelExport.deleteOne(id);
   if (!user) {
     return res.status(404).json({
       success: false,
       message: "User Doesn't Exist !!",
     });
   }
-
  return res.status(200).json({
-    success: true,
-    message: "Deleted User..",
-    data:user
-  });
+  success:true,
+  data:user
+ });
 }
 
 
