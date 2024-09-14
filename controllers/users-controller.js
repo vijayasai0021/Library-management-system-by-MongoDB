@@ -180,11 +180,11 @@ exports.updateUserData = async (req, res) => {
 
 exports.deleteUser = async (req,res)=>{
   const { id } = req.params;
-  const user = await UserModelExport.deleteOne(id);
+  const user = await UserModelExport.deleteOne({_id: id});
   if (!user) {
     return res.status(404).json({
       success: false,
-      message: "User Doesn't Exist !!",
+      message: "User Doesn't Exist !!"
     });
   }
  return res.status(200).json({
@@ -263,14 +263,15 @@ exports.deleteUser = async (req,res)=>{
 // });
 
 
-exports.getSubscriptionDetailsById = async(req,res)=>{
+exports.getSubscriptionDetailsById = async (req, res)=>{
   const { id } = req.params;
-  const user = UserModelExport.findById({_id:id});
+  // find({_id:id})
+  const user = await UserModelExport.findById(id);
 
   if (!user) {
     return res.status(404).json({
       success: false,
-      message: "User With The ID Didnt Exist",
+      message: "User With The ID Didnt Exist"
     });
   }
 
@@ -300,7 +301,7 @@ exports.getSubscriptionDetailsById = async(req,res)=>{
   let subscriptionDate = getDateInDays(user.subscriptionDate);
   let subscriptionExpiration = subscriptionType(subscriptionDate);
 
-  const data = {
+    const data = {
       ...user,
       isSubscriptionExpired: subscriptionExpiration < currentDate,
       daysLeftForExpiration:
@@ -317,6 +318,6 @@ exports.getSubscriptionDetailsById = async(req,res)=>{
     return res.status(200).json({
       success: true,
       message: "Subscription detail for the user is: ",
-      data,
-  });
+      data
+    });
 }
